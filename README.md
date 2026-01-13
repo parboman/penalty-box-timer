@@ -23,10 +23,16 @@ A standalone, offline-capable web app for managing penalty box timing during rol
 
 ## Credits
 
-**Developed by:** [Derbyshop.se](https://derbyshop.se)
+**Developed by** [Derbyshop.se](https://derbyshop.se)
 
-**Penalty box logic based on:** [CRG ScoreBoard](https://github.com/rollerderby/scoreboard)
-Original penalty timing code by Rob Thomas (The G33k) and Mr Temper.
+### Standing on the shoulders of giants
+
+The penalty box timing logic in this app is based on the excellent work done by the [CRG ScoreBoard](https://github.com/rollerderby/scoreboard) project. Special thanks to:
+
+- **Mr Temper** - Creator of the Carolina Rollergirls ScoreBoard
+- **Rob Thomas (The G33k)** - Original penalty timing implementation
+
+Their open-source work made this tool possible.
 
 ## License
 
