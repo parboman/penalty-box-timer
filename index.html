@@ -8,21 +8,32 @@
 </head>
 <body>
     <div class="app">
-        <!-- Header with clocks and jam control -->
+        <!-- Header with period/jam info and controls -->
         <header class="header">
             <div class="clock-group">
-                <div class="clock period-clock">
+                <div class="clock period-info">
                     <span class="clock-label">Period</span>
-                    <span class="clock-time" id="periodTime">30:00</span>
+                    <span class="clock-time" id="periodNumber">1</span>
+                </div>
+                <div class="clock jam-info">
+                    <span class="clock-label">Jam</span>
+                    <span class="clock-time" id="jamNumber">0</span>
                 </div>
                 <div class="clock jam-clock">
-                    <span class="clock-label">Jam</span>
+                    <span class="clock-label">Time</span>
                     <span class="clock-time" id="jamTime">2:00</span>
                 </div>
             </div>
-            <div class="jam-controls">
-                <button id="startJamBtn" class="btn btn-start">Start Jam</button>
-                <button id="stopJamBtn" class="btn btn-stop hidden">Stop Jam</button>
+            <div class="header-controls">
+                <div class="jam-controls">
+                    <button id="startJamBtn" class="btn btn-start">Start Jam</button>
+                    <button id="stopJamBtn" class="btn btn-stop hidden">Stop Jam</button>
+                </div>
+                <div class="period-controls">
+                    <button id="endPeriodBtn" class="btn btn-period">End Period</button>
+                    <button id="startPeriodBtn" class="btn btn-start hidden">Start New Period</button>
+                    <button id="endGameBtn" class="btn btn-danger hidden">End Game</button>
+                </div>
             </div>
         </header>
 
@@ -93,6 +104,23 @@
                 <button class="btn btn-close" id="btnClose">Close</button>
             </div>
         </div>
+
+        <!-- Confirmation popup for end game -->
+        <div class="popup-overlay hidden" id="confirmOverlay">
+            <div class="popup">
+                <h3 class="popup-title">End Game?</h3>
+                <p>This will reset everything. Are you sure?</p>
+                <div class="popup-buttons">
+                    <button class="btn btn-danger" id="confirmEndGame">Yes, End Game</button>
+                    <button class="btn btn-close" id="cancelEndGame">Cancel</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <span class="credit">A free tool from derbyshop.se</span>
+        </footer>
     </div>
 
     <script src="app.js"></script>

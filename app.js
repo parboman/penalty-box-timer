@@ -5,10 +5,11 @@
 
 // State management
 const state = {
+    periodNumber: 1,
+    jamNumber: 0,
     jamRunning: false,
-    periodTimeSec: 30 * 60, // 30 minutes in seconds
-    jamTimeSec: 2 * 60,     // 2 minutes in seconds
-    lastTickTime: null,
+    periodActive: true, // false = between periods
+    jamTimeSec: 2 * 60,
 
     // Seats indexed by "team-position" key
     seats: {}
@@ -24,25 +25,32 @@ const state = {
             isRunning: false,
             isPaused: false,
             timeLeftSec: 30,
-            enabled: true, // all seats enabled
-            timeLocked: false // jammer only: tracks if already released early (for ABA detection)
+            enabled: true,
+            timeLocked: false
         };
     });
 });
 
 // DOM elements
 const elements = {
-    periodTime: document.getElementById('periodTime'),
+    periodNumber: document.getElementById('periodNumber'),
+    jamNumber: document.getElementById('jamNumber'),
     jamTime: document.getElementById('jamTime'),
     startJamBtn: document.getElementById('startJamBtn'),
     stopJamBtn: document.getElementById('stopJamBtn'),
+    endPeriodBtn: document.getElementById('endPeriodBtn'),
+    startPeriodBtn: document.getElementById('startPeriodBtn'),
+    endGameBtn: document.getElementById('endGameBtn'),
     popupOverlay: document.getElementById('popupOverlay'),
     popupTimeLeft: document.getElementById('popupTimeLeft'),
     btnAddTime: document.getElementById('btnAddMin'),
     btnSubTime: document.getElementById('btnSubMin'),
     btnPause: document.getElementById('btnPause'),
     btnCancel: document.getElementById('btnCancel'),
-    btnClose: document.getElementById('btnClose')
+    btnClose: document.getElementById('btnClose'),
+    confirmOverlay: document.getElementById('confirmOverlay'),
+    confirmEndGame: document.getElementById('confirmEndGame'),
+    cancelEndGame: document.getElementById('cancelEndGame')
 };
 
 let currentPopupSeat = null;
@@ -98,7 +106,6 @@ function updateSeatDisplay(key) {
         }
     }
 }
-
 
 // Start penalty for a seat
 // Jammer logic based on WFTDA rules 7.3.x
@@ -170,7 +177,6 @@ function startPenalty(key) {
     seat.isPaused = false;
     seat.timeLeftSec = 30;
     updateSeatDisplay(key);
-
 }
 
 // Cancel a penalty
@@ -179,48 +185,43 @@ function cancelPenalty(key) {
     seat.isRunning = false;
     seat.isPaused = false;
     seat.timeLeftSec = 30;
-    seat.timeLocked = false; // reset for jammers
+    seat.timeLocked = false;
     updateSeatDisplay(key);
-
 }
 
 // Main timer update loop (ticks every second)
 let tickInterval = null;
 
 function tick() {
-    // Update period and jam clocks
-    if (state.jamRunning) {
-        state.periodTimeSec--;
+    // Only tick if jam is running and period is active
+    if (state.jamRunning && state.periodActive) {
         state.jamTimeSec--;
 
-        if (state.periodTimeSec < 0) state.periodTimeSec = 0;
         if (state.jamTimeSec <= 0) {
             state.jamTimeSec = 0;
             stopJam();
         }
+
+        // Update all penalty timers
+        Object.keys(state.seats).forEach(key => {
+            const seat = state.seats[key];
+            if (seat.isRunning && !seat.isPaused) {
+                seat.timeLeftSec--;
+
+                // Check if penalty complete
+                if (seat.timeLeftSec <= 0) {
+                    seat.isRunning = false;
+                    seat.timeLeftSec = 30;
+                    seat.timeLocked = false;
+                }
+
+                updateSeatDisplay(key);
+            }
+        });
     }
 
-    // Update clock displays
-    elements.periodTime.textContent = formatTime(state.periodTimeSec);
+    // Update displays
     elements.jamTime.textContent = formatTime(state.jamTimeSec);
-
-    // Update all penalty timers
-    Object.keys(state.seats).forEach(key => {
-        const seat = state.seats[key];
-        if (seat.isRunning && !seat.isPaused && state.jamRunning) {
-            seat.timeLeftSec--;
-
-            // Check if penalty complete
-            if (seat.timeLeftSec <= 0) {
-                seat.isRunning = false;
-                seat.timeLeftSec = 30;
-                seat.timeLocked = false; // reset for jammers
-
-            }
-
-            updateSeatDisplay(key);
-        }
-    });
 
     // Update popup if open
     if (currentPopupSeat) {
@@ -231,8 +232,13 @@ function tick() {
 
 // Jam controls
 function startJam() {
+    if (!state.periodActive) return;
+
     state.jamRunning = true;
+    state.jamNumber++;
     state.jamTimeSec = 2 * 60;
+
+    elements.jamNumber.textContent = state.jamNumber;
     elements.startJamBtn.classList.add('hidden');
     elements.stopJamBtn.classList.remove('hidden');
 }
@@ -241,6 +247,75 @@ function stopJam() {
     state.jamRunning = false;
     elements.startJamBtn.classList.remove('hidden');
     elements.stopJamBtn.classList.add('hidden');
+}
+
+// Period controls
+function endPeriod() {
+    stopJam();
+    state.periodActive = false;
+
+    elements.endPeriodBtn.classList.add('hidden');
+    elements.startJamBtn.classList.add('hidden');
+    elements.stopJamBtn.classList.add('hidden');
+    elements.startPeriodBtn.classList.remove('hidden');
+    elements.endGameBtn.classList.remove('hidden');
+}
+
+function startNewPeriod() {
+    state.periodNumber++;
+    state.jamNumber = 0;
+    state.periodActive = true;
+    state.jamTimeSec = 2 * 60;
+
+    elements.periodNumber.textContent = state.periodNumber;
+    elements.jamNumber.textContent = state.jamNumber;
+    elements.jamTime.textContent = formatTime(state.jamTimeSec);
+
+    elements.startPeriodBtn.classList.add('hidden');
+    elements.endGameBtn.classList.add('hidden');
+    elements.endPeriodBtn.classList.remove('hidden');
+    elements.startJamBtn.classList.remove('hidden');
+}
+
+function showEndGameConfirm() {
+    elements.confirmOverlay.classList.remove('hidden');
+}
+
+function hideEndGameConfirm() {
+    elements.confirmOverlay.classList.add('hidden');
+}
+
+function endGame() {
+    // Reset everything
+    state.periodNumber = 1;
+    state.jamNumber = 0;
+    state.jamRunning = false;
+    state.periodActive = true;
+    state.jamTimeSec = 2 * 60;
+
+    // Reset all seats
+    Object.keys(state.seats).forEach(key => {
+        const seat = state.seats[key];
+        seat.isRunning = false;
+        seat.isPaused = false;
+        seat.timeLeftSec = 30;
+        seat.timeLocked = false;
+        updateSeatDisplay(key);
+    });
+
+    // Update displays
+    elements.periodNumber.textContent = state.periodNumber;
+    elements.jamNumber.textContent = state.jamNumber;
+    elements.jamTime.textContent = formatTime(state.jamTimeSec);
+
+    // Reset buttons
+    elements.startPeriodBtn.classList.add('hidden');
+    elements.endGameBtn.classList.add('hidden');
+    elements.stopJamBtn.classList.add('hidden');
+    elements.endPeriodBtn.classList.remove('hidden');
+    elements.startJamBtn.classList.remove('hidden');
+
+    hideEndGameConfirm();
 }
 
 // Show popup for running timer
@@ -261,9 +336,6 @@ function hidePopup() {
 function handleSeatClick(e) {
     const seatEl = e.target.closest('.seat');
     if (!seatEl) return;
-
-    // Ignore clicks on duration buttons
-    if (e.target.closest('.duration-btn')) return;
 
     const team = seatEl.dataset.team;
     const position = seatEl.dataset.position;
@@ -288,6 +360,13 @@ function init() {
     // Jam controls
     elements.startJamBtn.addEventListener('click', startJam);
     elements.stopJamBtn.addEventListener('click', stopJam);
+
+    // Period controls
+    elements.endPeriodBtn.addEventListener('click', endPeriod);
+    elements.startPeriodBtn.addEventListener('click', startNewPeriod);
+    elements.endGameBtn.addEventListener('click', showEndGameConfirm);
+    elements.confirmEndGame.addEventListener('click', endGame);
+    elements.cancelEndGame.addEventListener('click', hideEndGameConfirm);
 
     // Seat clicks
     document.querySelectorAll('.seat').forEach(seat => {
@@ -330,7 +409,8 @@ function init() {
 
     // Initial display update
     Object.keys(state.seats).forEach(updateSeatDisplay);
-    elements.periodTime.textContent = formatTime(state.periodTimeSec);
+    elements.periodNumber.textContent = state.periodNumber;
+    elements.jamNumber.textContent = state.jamNumber;
     elements.jamTime.textContent = formatTime(state.jamTimeSec);
 
     // Start tick loop (every 1 second)

@@ -79,7 +79,18 @@ body {
     color: var(--color-accent);
 }
 
+.header-controls {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
 .jam-controls {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.period-controls {
     display: flex;
     gap: 0.5rem;
 }
@@ -132,6 +143,17 @@ body {
     color: #fff;
     width: 100%;
     margin-top: 1rem;
+}
+
+.btn-period {
+    background: var(--color-surface);
+    color: var(--color-text);
+    border: 2px solid var(--color-warning);
+}
+
+.btn-danger {
+    background: var(--color-danger);
+    color: #fff;
 }
 
 .hidden {
@@ -331,4 +353,18 @@ body {
     .timer {
         font-size: 1.25rem;
     }
+}
+
+/* Footer */
+.footer {
+    position: fixed;
+    bottom: 0.5rem;
+    right: 0.75rem;
+    z-index: 10;
+}
+
+.credit {
+    font-size: 0.7rem;
+    color: var(--color-text-dim);
+    opacity: 0.6;
 }
