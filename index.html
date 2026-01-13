@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Penalty Box Timer</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app">
+        <!-- Header with clocks and jam control -->
+        <header class="header">
+            <div class="clock-group">
+                <div class="clock period-clock">
+                    <span class="clock-label">Period</span>
+                    <span class="clock-time" id="periodTime">30:00</span>
+                </div>
+                <div class="clock jam-clock">
+                    <span class="clock-label">Jam</span>
+                    <span class="clock-time" id="jamTime">2:00</span>
+                </div>
+            </div>
+            <div class="jam-controls">
+                <button id="startJamBtn" class="btn btn-start">Start Jam</button>
+                <button id="stopJamBtn" class="btn btn-stop hidden">Stop Jam</button>
+            </div>
+        </header>
+
+        <!-- Main penalty box area -->
+        <main class="penalty-area">
+            <!-- Team 1 -->
+            <section class="team team-1">
+                <h2 class="team-name">Team 1</h2>
+
+                <div class="seat jammer-seat" data-team="1" data-position="jammer">
+                    <span class="position-label">Jammer</span>
+                    <span class="timer">0:30</span>
+                </div>
+
+                <div class="seat blocker-seat" data-team="1" data-position="blocker1">
+                    <span class="position-label">Blocker 1</span>
+                    <span class="timer">0:30</span>
+                </div>
+
+                <div class="seat blocker-seat" data-team="1" data-position="blocker2">
+                    <span class="position-label">Blocker 2</span>
+                    <span class="timer">0:30</span>
+                </div>
+
+                <div class="seat blocker-seat disabled" data-team="1" data-position="blocker3">
+                    <span class="position-label">Blocker 3</span>
+                    <span class="timer">--:--</span>
+                </div>
+            </section>
+
+            <!-- Team 2 -->
+            <section class="team team-2">
+                <h2 class="team-name">Team 2</h2>
+
+                <div class="seat jammer-seat" data-team="2" data-position="jammer">
+                    <span class="position-label">Jammer</span>
+                    <span class="timer">0:30</span>
+                </div>
+
+                <div class="seat blocker-seat" data-team="2" data-position="blocker1">
+                    <span class="position-label">Blocker 1</span>
+                    <span class="timer">0:30</span>
+                </div>
+
+                <div class="seat blocker-seat" data-team="2" data-position="blocker2">
+                    <span class="position-label">Blocker 2</span>
+                    <span class="timer">0:30</span>
+                </div>
+
+                <div class="seat blocker-seat disabled" data-team="2" data-position="blocker3">
+                    <span class="position-label">Blocker 3</span>
+                    <span class="timer">--:--</span>
+                </div>
+            </section>
+        </main>
+
+        <!-- Popup for adjusting running timer -->
+        <div class="popup-overlay hidden" id="popupOverlay">
+            <div class="popup">
+                <h3 class="popup-title">Adjust Penalty</h3>
+                <p class="popup-time">Time left: <span id="popupTimeLeft">0:30</span></p>
+                <div class="popup-buttons">
+                    <button class="btn btn-adjust" id="btnAddMin">+30 sec</button>
+                    <button class="btn btn-adjust" id="btnSubMin">-30 sec</button>
+                    <button class="btn btn-pause" id="btnPause">Pause</button>
+                    <button class="btn btn-cancel" id="btnCancel">Cancel Penalty</button>
+                </div>
+                <button class="btn btn-close" id="btnClose">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
