@@ -24,7 +24,7 @@ const state = {
             isRunning: false,
             isPaused: false,
             timeLeftSec: 30,
-            enabled: position !== 'blocker3', // blocker3 starts disabled
+            enabled: true, // all seats enabled
             timeLocked: false // jammer only: tracks if already released early (for ABA detection)
         };
     });
@@ -99,43 +99,6 @@ function updateSeatDisplay(key) {
     }
 }
 
-// Update blocker seat availability per team
-function updateBlockerSeats(team) {
-    const b1 = state.seats[`${team}-blocker1`];
-    const b2 = state.seats[`${team}-blocker2`];
-    const b3 = state.seats[`${team}-blocker3`];
-
-    // Count running blockers and those about to leave (<10s)
-    let running = 0;
-    let standing = 0;
-    [b1, b2, b3].forEach(b => {
-        if (b.isRunning) running++;
-        if (b.isRunning && b.timeLeftSec < 10) standing++;
-    });
-
-    // Logic: enable seat 3 only if 2 are running AND one is about to leave
-    if (running >= 2 && standing > 0) {
-        b1.enabled = true;
-        b2.enabled = true;
-        b3.enabled = true;
-    } else if (b3.isRunning) {
-        // If b3 is running, disable whichever of b1/b2 isn't running
-        if (!b1.isRunning && b2.isRunning) b1.enabled = false;
-        if (!b2.isRunning && b1.isRunning) b2.enabled = false;
-        if (!b1.isRunning && !b2.isRunning) {
-            b1.enabled = true;
-            b2.enabled = false;
-        }
-    } else {
-        // Default: b1 and b2 enabled, b3 disabled
-        b1.enabled = true;
-        b2.enabled = true;
-        b3.enabled = false;
-    }
-
-    // Update displays
-    [`${team}-blocker1`, `${team}-blocker2`, `${team}-blocker3`].forEach(updateSeatDisplay);
-}
 
 // Start penalty for a seat
 // Jammer logic based on WFTDA rules 7.3.x
@@ -208,9 +171,6 @@ function startPenalty(key) {
     seat.timeLeftSec = 30;
     updateSeatDisplay(key);
 
-    if (seat.position.startsWith('blocker')) {
-        updateBlockerSeats(seat.team);
-    }
 }
 
 // Cancel a penalty
@@ -222,9 +182,6 @@ function cancelPenalty(key) {
     seat.timeLocked = false; // reset for jammers
     updateSeatDisplay(key);
 
-    if (seat.position.startsWith('blocker')) {
-        updateBlockerSeats(seat.team);
-    }
 }
 
 // Main timer update loop (ticks every second)
@@ -259,18 +216,11 @@ function tick() {
                 seat.timeLeftSec = 30;
                 seat.timeLocked = false; // reset for jammers
 
-                if (seat.position.startsWith('blocker')) {
-                    updateBlockerSeats(seat.team);
-                }
             }
 
             updateSeatDisplay(key);
         }
     });
-
-    // Update blocker seat availability
-    updateBlockerSeats('1');
-    updateBlockerSeats('2');
 
     // Update popup if open
     if (currentPopupSeat) {
