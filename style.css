@@ -261,6 +261,30 @@ body {
     color: var(--color-accent-light);
 }
 
+/* Jammer seat distinction */
+.jammer-seat {
+    margin-bottom: 0.5rem;
+    border: 2px solid rgba(255, 215, 0, 0.4);
+    background: rgba(255, 215, 0, 0.05);
+}
+
+.jammer-seat .position-label {
+    color: #ffd700;
+}
+
+.jammer-seat.running {
+    border-color: #a855f7;
+    background: rgba(168, 85, 247, 0.2);
+}
+
+.jammer-seat.running .timer {
+    color: #c084fc;
+}
+
+.jammer-seat.running .position-label {
+    color: #c084fc;
+}
+
 /* Popup overlay */
 .popup-overlay {
     position: fixed;
