@@ -10,6 +10,11 @@
     <div class="app">
         <!-- Header with period/jam info and controls -->
         <header class="header">
+            <div class="period-controls">
+                <button id="endPeriodBtn" class="btn btn-period">End Period</button>
+                <button id="startPeriodBtn" class="btn btn-start hidden">Start New Period</button>
+                <button id="endGameBtn" class="btn btn-danger hidden">End Game</button>
+            </div>
             <div class="clock-group">
                 <div class="clock period-info">
                     <span class="clock-label">Period</span>
@@ -24,16 +29,9 @@
                     <span class="clock-time" id="jamTime">2:00</span>
                 </div>
             </div>
-            <div class="header-controls">
-                <div class="jam-controls">
-                    <button id="startJamBtn" class="btn btn-start">Start Jam</button>
-                    <button id="stopJamBtn" class="btn btn-stop hidden">Stop Jam</button>
-                </div>
-                <div class="period-controls">
-                    <button id="endPeriodBtn" class="btn btn-period">End Period</button>
-                    <button id="startPeriodBtn" class="btn btn-start hidden">Start New Period</button>
-                    <button id="endGameBtn" class="btn btn-danger hidden">End Game</button>
-                </div>
+            <div class="jam-controls">
+                <button id="startJamBtn" class="btn btn-start btn-jam">Start Jam</button>
+                <button id="stopJamBtn" class="btn btn-stop btn-jam hidden">Stop Jam</button>
             </div>
         </header>
 

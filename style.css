@@ -79,20 +79,23 @@ body {
     color: var(--color-accent);
 }
 
-.header-controls {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-}
-
 .jam-controls {
     display: flex;
-    gap: 0.5rem;
+    flex: 1;
+    margin-left: 2rem;
+}
+
+.btn-jam {
+    flex: 1;
+    font-size: 1.75rem;
+    font-weight: 700;
 }
 
 .period-controls {
     display: flex;
+    flex-direction: column;
     gap: 0.5rem;
+    margin-right: 2rem;
 }
 
 /* Buttons */
@@ -336,8 +339,25 @@ body {
 /* Responsive adjustments */
 @media (max-width: 768px) {
     .header {
-        flex-direction: column;
-        gap: 1rem;
+        flex-wrap: wrap;
+        gap: 0.75rem;
+    }
+
+    .clock-group {
+        order: -1;
+        width: 100%;
+        justify-content: center;
+    }
+
+    .period-controls {
+        flex-direction: row;
+    }
+
+    .btn-jam {
+        font-size: 1.25rem;
+        padding: 1rem 1.5rem;
+        min-height: 60px;
+        min-width: 120px;
     }
 
     .clock-time {
