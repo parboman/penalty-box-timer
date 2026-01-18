@@ -103,8 +103,20 @@
             </div>
         </div>
 
+        <!-- Confirmation popup for end period -->
+        <div class="popup-overlay hidden" id="confirmPeriodOverlay">
+            <div class="popup">
+                <h3 class="popup-title">End Period?</h3>
+                <p>Players in the box will keep their time until next period.</p>
+                <div class="popup-buttons">
+                    <button class="btn btn-period" id="confirmEndPeriod">Yes, End Period</button>
+                    <button class="btn btn-close" id="cancelEndPeriod">Cancel</button>
+                </div>
+            </div>
+        </div>
+
         <!-- Confirmation popup for end game -->
-        <div class="popup-overlay hidden" id="confirmOverlay">
+        <div class="popup-overlay hidden" id="confirmGameOverlay">
             <div class="popup">
                 <h3 class="popup-title">End Game?</h3>
                 <p>This will reset everything. Are you sure?</p>
@@ -117,7 +129,7 @@
 
         <!-- Footer -->
         <footer class="footer">
-            <span class="credit">A free tool from derbyshop.se</span>
+            <span class="credit">A free tool from <a href="https://derbyshop.se" target="_blank">derbyshop.se</a></span>
         </footer>
     </div>
 

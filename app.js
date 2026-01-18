@@ -48,7 +48,10 @@ const elements = {
     btnPause: document.getElementById('btnPause'),
     btnCancel: document.getElementById('btnCancel'),
     btnClose: document.getElementById('btnClose'),
-    confirmOverlay: document.getElementById('confirmOverlay'),
+    confirmPeriodOverlay: document.getElementById('confirmPeriodOverlay'),
+    confirmEndPeriod: document.getElementById('confirmEndPeriod'),
+    cancelEndPeriod: document.getElementById('cancelEndPeriod'),
+    confirmGameOverlay: document.getElementById('confirmGameOverlay'),
     confirmEndGame: document.getElementById('confirmEndGame'),
     cancelEndGame: document.getElementById('cancelEndGame')
 };
@@ -250,7 +253,16 @@ function stopJam() {
 }
 
 // Period controls
+function showEndPeriodConfirm() {
+    elements.confirmPeriodOverlay.classList.remove('hidden');
+}
+
+function hideEndPeriodConfirm() {
+    elements.confirmPeriodOverlay.classList.add('hidden');
+}
+
 function endPeriod() {
+    hideEndPeriodConfirm();
     stopJam();
     state.periodActive = false;
 
@@ -278,11 +290,11 @@ function startNewPeriod() {
 }
 
 function showEndGameConfirm() {
-    elements.confirmOverlay.classList.remove('hidden');
+    elements.confirmGameOverlay.classList.remove('hidden');
 }
 
 function hideEndGameConfirm() {
-    elements.confirmOverlay.classList.add('hidden');
+    elements.confirmGameOverlay.classList.add('hidden');
 }
 
 function endGame() {
@@ -362,7 +374,9 @@ function init() {
     elements.stopJamBtn.addEventListener('click', stopJam);
 
     // Period controls
-    elements.endPeriodBtn.addEventListener('click', endPeriod);
+    elements.endPeriodBtn.addEventListener('click', showEndPeriodConfirm);
+    elements.confirmEndPeriod.addEventListener('click', endPeriod);
+    elements.cancelEndPeriod.addEventListener('click', hideEndPeriodConfirm);
     elements.startPeriodBtn.addEventListener('click', startNewPeriod);
     elements.endGameBtn.addEventListener('click', showEndGameConfirm);
     elements.confirmEndGame.addEventListener('click', endGame);
