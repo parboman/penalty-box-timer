@@ -2,6 +2,8 @@
 
 A standalone, offline-capable web app for managing penalty box timing during roller derby scrimmages. Optimized for tablets.
 
+**Try it live:** [box.derbyshop.se](https://box.derbyshop.se)
+
 ## Features
 
 - **30-second penalties** with synced countdown
@@ -10,7 +12,6 @@ A standalone, offline-capable web app for managing penalty box timing during rol
   - Simultaneous sit: both jammers get 5 seconds
   - Jammer swap: new jammer serves time other already sat, other released
   - ABA scenario: returning jammer serves full time, no release
-- **Blocker seat logic**: max 2 in box, seat 3 enables when one is about to leave
 - **Visual warnings**: yellow at 10s (stand), red at 3s (release)
 - **Works offline**: just open the HTML file in a browser
 
