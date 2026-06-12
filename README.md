@@ -39,8 +39,10 @@ Their open-source work made this tool possible.
 
 This project is dual-licensed under either:
 
-- **GNU General Public License v3.0** (or later) - see [LICENSE-GPL](LICENSE-GPL)
-- **Apache License 2.0** - see [LICENSE-APACHE](LICENSE-APACHE)
+- **GNU General Public License v3.0** (or later)
+- **Apache License 2.0**
+
+See [LICENSE](LICENSE) for details.
 
 You may choose either license at your option.
 
